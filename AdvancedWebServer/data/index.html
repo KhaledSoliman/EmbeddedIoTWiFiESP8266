@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>ESP8266 - HTTP Server</title>
+
+  <link href="bootstrap-0.min.css" rel="stylesheet">
+  <link href="bootstrap-1.min.css" rel="stylesheet">
+  <link href="bootstrap-2.min.css" rel="stylesheet">
+  <link href="bootstrap-3.min.css" rel="stylesheet">
+  <link href="bootstrap-4.min.css" rel="stylesheet">
+  <link href="bootstrap-5.min.css" rel="stylesheet">
+  <style>
+  .mar {
+    margin-bottom: 25px;
+  }
+  </style>
+  <!-- Bootstrap core CSS -->
+  <script>
+    var websock;
+    function start() {
+      websock = new WebSocket('ws://' + window.location.hostname + ':81/');
+      websock.onopen = function(evt) { console.log('websock open'); };
+      websock.onclose = function(evt) { console.log('websock close'); };
+      websock.onerror = function(evt) { console.log(evt); };
+      websock.onmessage = function(evt) {
+        console.log(evt);
+        var e = document.getElementById('ledState');
+        if (evt.data === 'toggleLED') {
+        }
+        else if (evt.data === 'ledoff') {
+          e.style.color = 'black';
+        }
+        else {
+          console.log('unknown event');
+        }
+      };
+    }
+    function buttonclick(e) {
+      websock.send('$' + e.id);
+    }
+  </script>
+</head>
+<body onload="javascript:start();">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">ESP8266 Module</a>
+  </div>
+</nav>
+<!-- Page Content -->
+<div class="container text-white">
+  <div class="row">
+    <div class="col-lg-6 text-center justify-content-right">
+      <h1 class="mt-5">Debug Functions</h1>
+      <div class="container">
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>Ping uC</label>
+          </div>
+          <div class="col-4">
+            <button class="btn btn-info" type="submit">PING</button>
+          </div>
+        </div>
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>Current Date and Time</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" type="submit">GetTime</button>
+          </div>
+        </div>
+
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>Current Temperature</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" type="submit">GetTemperature</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 text-center">
+      <h1 class="mt-5">Control Functions</h1>
+      <div class="container">
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>ESP Blue LED Function</label>
+          </div>
+          <div class="col-4">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" onclick="buttonclick(this);" id="toggleESPLED">
+              <label class="custom-control-label" for="toggleESPLED">ESP LED</label>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>STM Green LED Function (LD3)</label>
+          </div>
+          <div class="col-4">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" onclick="buttonclick(this);" id="toggleSTMLED">
+              <label class="custom-control-label" for="toggleSTMLED">STM LED</label>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>Current Date and Time</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" type="submit">GetTime</button>
+          </div>
+        </div>
+
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>Current Temperature</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" type="submit">GetTemperature</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mt-5">Output:</h1>
+      <p class="lead">Results of any of the above functions will be displayed below.</p>
+      <div class="form-group">
+        <textarea class="form-control bg-dark border-info shadow-none" id="exampleFormControlTextarea4" rows="12" readonly></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
