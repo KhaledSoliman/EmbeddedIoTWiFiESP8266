@@ -34,11 +34,11 @@ Create a small IoT application that can enable the user to perform I/O operation
 
 ## Architecture
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/architecture.png "Architecture IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/architecture.png "Architecture IMG")
 
 ## Connections
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Connections.png "Connections IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/Connections.png "Connections IMG")
 
 ## Functionality
 
@@ -67,9 +67,16 @@ Create a small IoT application that can enable the user to perform I/O operation
 | $G Alarm | Get alarm status of RTC module |
 | $G Temp | Get temperature of RTC module |
 
+## Operation Demo
+
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/OperationSS1.png "Connections IMG")
+
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/OperationSS2.png "Connections IMG")
+
 ## Limitations
 
 * SPIFFS is deprecated and should migrate to LittleFS for better directory structure
 * Web Server serves clients on a public socket (Improve websocket communications)
 * If any of the HTML or CSS3 files get too large web server faces issues in serving them (Stream data by chunks)
 * Implement FreeRTOS or similar functionalities in the microcontroller for better response time/extensibility
+* Sync Functionality
