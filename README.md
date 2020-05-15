@@ -50,8 +50,12 @@ Create a small IoT application that can enable the user to perform I/O operation
 * Setting the time on the RTC module
 * Setting an alarm on the RTC module
 
-## Command Structure 
+## Communication Structure 
+### Structure
+`$ID Parameter1 Parameter2...ParameterN\n`
 
+Every command starts with $ and ends with \n, the $ is to distinguish the command ID from command parameters and the \n is to mark the end of the command distinguishing commands from each other
+### Commands
 | Command | Description |
 |---|---|
 | $P STM | Ping STM module |
