@@ -1,4 +1,20 @@
-# EmbeddedIoTWiFiESP8266
+# Embedded Systems Project
+
+## Description
+
+This project was implemented for the course CSCE4301 - Section 1 Embedded Systems
+
+### Author
+
+Khaled Soliman CE Undergraduate
+
+### Supervised By
+
+Doctor Mohamed Shalan PhD
+
+### Project Prompt
+
+Create a small IoT application that can enable the user to perform I/O operations with the STM32 module through a web interface. 
 
 ## Hardware Components
 
