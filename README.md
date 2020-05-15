@@ -18,11 +18,11 @@
 
 ## Architecture
 
-![alt text](https://github.com/ "Architecture IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/architecture.png "Architecture IMG")
 
 ## Connections
 
-![alt text](https://github.com/ "Connections IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Connections.png "Connections IMG")
 
 ## Functionality
 
