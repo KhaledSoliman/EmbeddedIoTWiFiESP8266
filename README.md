@@ -34,11 +34,11 @@ Create a small IoT application that can enable the user to perform I/O operation
 
 ## Architecture
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/architecture.png "Architecture IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/architecture.png "Architecture IMG")
 
 ## Connections
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/Connections.png "Connections IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/Connections.png "Connections IMG")
 
 ## Functionality
 
@@ -69,9 +69,9 @@ Create a small IoT application that can enable the user to perform I/O operation
 
 ## Operation Demo
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/OperationSS1.png "Connections IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/OperationSS1.png "Connections IMG")
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/docs/OperationSS2.png "Connections IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/OperationSS2.png "Connections IMG")
 
 ## Limitations
 
