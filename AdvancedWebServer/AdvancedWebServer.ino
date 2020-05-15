@@ -12,20 +12,24 @@ const char *ap_ssid = APSTASSID;
 const char *ap_password = APSTAPSK;
 
 //Commands
-const char toggleSTMLED_Command[] = "$toggleSTMLED";
-const char toggleESPLED_Command[] = "$toggleESPLED";
-const char LEDOFF[] = "ledoff";
+const char ping_Command[] = "$P STM";
+const char STMLED_Command[] = "$LG";
+const char ESPLED_Command[] = "$LB";
+const char getTime_Command[] = "$G Time";
+const char setTime_Command[] = "$S Time";
+const char setAlarm_Command[] = "$S Alarm";
+const char getAlarm_Command[] = "$G Alarm";
+const char getTemperature_Command[] = "$G Temp";
 
 ESP8266WebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(81);
 
 const int ESPLed = LED_BUILTIN;
 
-bool LEDSTMState = false;
 bool LEDESPState = false;
 void toggleSTMLED();
 void toggleESPLED();
-const bool DEBUG = false;
+const bool DEBUG = true;
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
 
 bool handleFileRead(String path);
@@ -42,8 +46,10 @@ void setup(void) {
     Serial.println();
     Serial.println("Configuring access point...");
   }
+
   WiFi.softAP(ap_ssid, ap_password);
   IPAddress myIP = WiFi.softAPIP();
+
   if (DEBUG) {
     Serial.print("AP IP address: ");
     Serial.println(myIP);
@@ -71,6 +77,7 @@ void setup(void) {
 
 void loop(void) {
   webSocket.loop();
+  serialListen();
   server.handleClient();
   MDNS.update();
 }
@@ -81,22 +88,32 @@ void transmit_delayed(const char* trx_buffer, int period) {
     delay(period);
     Serial.flush();
   }
+  Serial.print('\n');
+  Serial.flush();
 }
 
-void toggleSTMLED() {
-  LEDSTMState = !LEDSTMState;
-  if (DEBUG) {
-    Serial.printf("STM LED: %u!\r\n", LEDSTMState);
+void serialListen() {
+  if (Serial.available() > 0) {
+    String reply = Serial.readStringUntil('\n');
+    webSocket.broadcastTXT(reply);
   }
-  transmit_delayed(toggleSTMLED_Command,10);
 }
 
-void toggleESPLED() {
-  LEDESPState = !LEDESPState;
+void ESPLED(String state = "T") {
+  if (state == "T")
+    LEDESPState = !LEDESPState;
+  else
+    LEDESPState = (state == "ON");
+
   if (DEBUG) {
     Serial.printf("ESP LED: %u\r\n", LEDESPState);
   }
-  digitalWrite(ESPLed, LEDESPState ? HIGH : LOW);
+
+  digitalWrite(ESPLed, LEDESPState ? LOW : HIGH);
+}
+
+void sendCommand(String command) {
+  transmit_delayed(command.c_str(), 10);
 }
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
@@ -123,15 +140,31 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         Serial.printf("[%u] get Text: %s\r\n", num, payload);
       }
 
-      if (strcmp(toggleESPLED_Command, (const char *)payload) == 0) {
-        toggleESPLED();
-      } else if (strcmp(toggleSTMLED_Command, (const char *)payload) == 0) {
-        toggleSTMLED();
+      if (strncmp(ESPLED_Command, (const char *)payload, strlen(ESPLED_Command)) == 0) {
+        String command = String((char *)payload);
+        if (command.length() > strlen(ESPLED_Command))
+          ESPLED(command.substring(strlen(ESPLED_Command) + 1));
+        else
+          ESPLED();
+      } else if (strncmp(STMLED_Command, (const char *)payload, strlen(STMLED_Command)) == 0) {
+        sendCommand(String((char *)payload));
+      } else if (strncmp(ping_Command, (const char *)payload, strlen(ping_Command)) == 0) {
+        sendCommand(String((char *)payload));
+      } else if (strncmp(getTime_Command, (const char *)payload, strlen(getTime_Command)) == 0) {
+        sendCommand(String((char *)payload));
+      } else if (strncmp(getTemperature_Command, (const char *)payload, strlen(getTemperature_Command)) == 0) {
+        sendCommand(String((char *)payload));
+      } else if (strncmp(setTime_Command, (const char *)payload, strlen(setTime_Command)) == 0) {
+        sendCommand(String((char *)payload));
+      } else if (strncmp(setAlarm_Command, (const char *)payload, strlen(setAlarm_Command)) == 0) {
+        sendCommand(String((char *)payload));
+      } else if (strncmp(getAlarm_Command, (const char *)payload, strlen(getAlarm_Command)) == 0) {
+        sendCommand(String((char *)payload));
       } else if (DEBUG) {
         Serial.println("Unknown command");
       }
 
-      webSocket.broadcastTXT(payload, length);
+      webSocket.broadcastTXT("Command Received " + String((char *)payload));
       if (DEBUG) {
         printf("[%u]   payload- %s\n", num, payload);
       }
@@ -215,23 +248,3 @@ String getContentType(String filename) {
   else if (filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
 }
-
-//
-//void handleNotFound() {
-//  digitalWrite(led, 1);
-//  String message = "File Not Found\n\n";
-//  message += "URI: ";
-//  message += server.uri();
-//  message += "\nMethod: ";
-//  message += (server.method() == HTTP_GET) ? "GET" : "POST";
-//  message += "\nArguments: ";
-//  message += server.args();
-//  message += "\n";
-//
-//  for (uint8_t i = 0; i < server.args(); i++) {
-//    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
-//  }
-//
-//  server.send(404, "text/plain", message);
-//  digitalWrite(led, 0);
-//}

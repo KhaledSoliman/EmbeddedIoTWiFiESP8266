@@ -21,26 +21,45 @@
   <!-- Bootstrap core CSS -->
   <script>
     var websock;
+    var started;
+    var ended;
+    var responded = false;
     function start() {
       websock = new WebSocket('ws://' + window.location.hostname + ':81/');
       websock.onopen = function(evt) { console.log('websock open'); };
       websock.onclose = function(evt) { console.log('websock close'); };
       websock.onerror = function(evt) { console.log(evt); };
       websock.onmessage = function(evt) {
-        console.log(evt);
-        var e = document.getElementById('ledState');
-        if (evt.data === 'toggleLED') {
-        }
-        else if (evt.data === 'ledoff') {
-          e.style.color = 'black';
-        }
-        else {
-          console.log('unknown event');
-        }
+       console.log(evt);
+       if(evt.data == "PONG!") {
+         ended = new Date().getTime()
+         var milliseconds = ended - started;
+         document.getElementById('consoleOut').value += "[Responded in " + milliseconds +" ms] " + evt.data + "\n";
+         responded = true;
+       } else {
+         document.getElementById('consoleOut').value += evt.data + "\n";
+       }
       };
     }
     function buttonclick(e) {
-      websock.send('$' + e.id);
+      var command;
+      if(e.id == "S Alarm") {
+        command = '$' + e.id + ' ' + document.getElementById('currAlarm').value;
+      } else if (e.id == "S Time") {
+        command = '$' + e.id + ' ' + document.getElementById('currTime').value;
+      } else if (e.id == "P STM") {
+        started = new Date().getTime();
+        this.timer = setTimeout(function() { if(!responded) {
+          document.getElementById('consoleOut').value += "[Response timed out]\n";
+        } else {
+          responded = false;
+        } }, 1500);
+        command = '$' + e.id;
+      }else {
+        command = '$' + e.id;
+      }
+      websock.send(command);
+      document.getElementById('consoleOut').value += "Sending Command " + command + "...\n";
     }
   </script>
 </head>
@@ -54,67 +73,116 @@
 <!-- Page Content -->
 <div class="container text-white">
   <div class="row">
-    <div class="col-lg-6 text-center justify-content-right">
-      <h1 class="mt-5">Debug Functions</h1>
+    <div class="col-12 text-center">
+      <h1 class="mt-5">Control Functions</h1>
       <div class="container">
         <div class="row justify-content-around mar">
           <div class="col-6">
             <label>Ping uC</label>
           </div>
           <div class="col-4">
-            <button class="btn btn-info" type="submit">PING</button>
-          </div>
-        </div>
-        <div class="row justify-content-around mar">
-          <div class="col-6">
-            <label>Current Date and Time</label>
-          </div>
-          <div class="col-4 mb-100">
-            <button class="btn btn-info" type="submit">GetTime</button>
+            <button class="btn btn-info" onclick="buttonclick(this);" id="P STM" type="submit">PING</button>
           </div>
         </div>
 
         <div class="row justify-content-around mar">
-          <div class="col-6">
-            <label>Current Temperature</label>
+          <div class="col-4">
+            <label>ESP Blue LED Turn ON</label>
           </div>
           <div class="col-4 mb-100">
-            <button class="btn btn-info" type="submit">GetTemperature</button>
+            <button class="btn btn-info" onclick="buttonclick(this);" id="LB ON" type="submit">Blue LED ON</button>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-lg-6 text-center">
-      <h1 class="mt-5">Control Functions</h1>
-      <div class="container">
+
+        <div class="row justify-content-around mar">
+          <div class="col-4">
+            <label>ESP Blue LED Turn OFF</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" onclick="buttonclick(this);" id="LB OFF" type="submit">Blue LED OFF</button>
+          </div>
+        </div>
+
         <div class="row justify-content-around mar">
           <div class="col-6">
             <label>ESP Blue LED Function</label>
           </div>
           <div class="col-4">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" onclick="buttonclick(this);" id="toggleESPLED">
-              <label class="custom-control-label" for="toggleESPLED">ESP LED</label>
+              <input type="checkbox" class="custom-control-input" onclick="buttonclick(this);" id="LB">
+              <label class="custom-control-label" for="LB">ESP LED</label>
             </div>
           </div>
         </div>
+        <div class="row justify-content-around mar">
+          <div class="col-4">
+            <label>STM Green LED Turn ON</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" onclick="buttonclick(this);" id="LG ON" type="submit">Green LED ON</button>
+          </div>
+        </div>
+
+        <div class="row justify-content-around mar">
+          <div class="col-4">
+            <label>STM Green LED Turn OFF</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" onclick="buttonclick(this);" id="LG OFF" type="submit">Green LED OFF</button>
+          </div>
+        </div>
+
         <div class="row justify-content-around mar">
           <div class="col-6">
             <label>STM Green LED Function (LD3)</label>
           </div>
           <div class="col-4">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" onclick="buttonclick(this);" id="toggleSTMLED">
-              <label class="custom-control-label" for="toggleSTMLED">STM LED</label>
+              <input type="checkbox" class="custom-control-input" onclick="buttonclick(this);" id="LG">
+              <label class="custom-control-label" for="LG">STM LED</label>
             </div>
           </div>
         </div>
+
+        <div class="row justify-content-around mar">
+          <div class="col-4">
+            <label>Set Time</label>
+          </div>
+          <div class="col-4 mb-100">
+            <input class="form-control bg-dark border-info shadow-none" step="1" type="time" id="currTime" name="currTime">
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" onclick="buttonclick(this);" id="S Time" type="submit">Set Time</button>
+          </div>
+        </div>
+
         <div class="row justify-content-around mar">
           <div class="col-6">
             <label>Current Date and Time</label>
           </div>
           <div class="col-4 mb-100">
-            <button class="btn btn-info" type="submit">GetTime</button>
+            <button class="btn btn-info" onclick="buttonclick(this);" id="G Time" type="submit">Get Time</button>
+          </div>
+        </div>
+
+        <div class="row justify-content-around mar">
+          <div class="col-6">
+            <label>Alarm Flag</label>
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" onclick="buttonclick(this);" id="G Alarm" type="submit">Get Alarm</button>
+          </div>
+        </div>
+
+        <div class="row justify-content-around mar">
+          <div class="col-4">
+            <label>Set Alarm</label>
+          </div>
+          <div class="col-4 mb-100">
+            <input class="form-control bg-dark border-info shadow-none" step="1" type="time" id="currAlarm" name="currAlarm">
+          </div>
+          <div class="col-4 mb-100">
+            <button class="btn btn-info" onclick="buttonclick(this);" id="S Alarm" type="submit">Set Alarm</button>
           </div>
         </div>
 
@@ -123,18 +191,19 @@
             <label>Current Temperature</label>
           </div>
           <div class="col-4 mb-100">
-            <button class="btn btn-info" type="submit">GetTemperature</button>
+            <button class="btn btn-info" onclick="buttonclick(this);" id="G Temp" type="submit">Get Temperature</button>
           </div>
         </div>
+
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
       <h1 class="mt-5">Output:</h1>
-      <p class="lead">Results of any of the above functions will be displayed below.</p>
+      <p class="lead">Results of the above functions will be displayed below.</p>
       <div class="form-group">
-        <textarea class="form-control bg-dark border-info shadow-none" id="exampleFormControlTextarea4" rows="12" readonly></textarea>
+        <textarea class="form-control bg-dark border-info shadow-none" id="consoleOut" rows="12" readonly></textarea>
       </div>
     </div>
   </div>
