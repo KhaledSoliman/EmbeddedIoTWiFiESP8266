@@ -5,7 +5,7 @@
 #include <ESP8266mDNS.h>
 
 #define APSTASSID "ESPap"
-#define APSTAPSK  "khaled112358"
+#define APSTAPSK  "12345678"
 
 
 const char *ap_ssid = APSTASSID;
