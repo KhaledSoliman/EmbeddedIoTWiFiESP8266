@@ -28,6 +28,19 @@ Create a small IoT application that can enable the user to perform I/O operation
 * STM32CubeMX
 * Keil uVision 5
 
+## Building
+
+There are two components to this project the arduino code to be flashed onto the ESP module and the keil code to be flashed onto the STM module.
+
+Once you have installed the prequisite software proceed by compiling and flashing the code onto their respective modules.
+
+## Running
+
+To run the code just:
+- Power up the modules
+- Connect to the WiFi called ESPap using the password which is defaulted on "12345678"
+- Enter into your browser window the IP address 192.168.4.1 to access the WiFi module's web server
+
 ## Architecture
 
 ![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/architecture.png "Architecture IMG")
