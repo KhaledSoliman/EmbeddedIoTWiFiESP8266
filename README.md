@@ -38,8 +38,12 @@ Once you have installed the prequisite software proceed by compiling and flashin
 
 To run the code just:
 - Power up the modules
-- Connect to the WiFi called ESPap using the password which is defaulted on "12345678"
-- Enter into your browser window the IP address 192.168.4.1 to access the WiFi module's web server
+- If in access point mode then
+  - Connect to the WiFi called ESPap using the password which is defaulted on "12345678"
+  - Enter into your browser window the IP address 192.168.4.1 to access the WiFi module's web server
+- If in station mode
+  - Get the device local ip from your gateway
+  - Use that ip to access the webserver
 
 ## Architecture
 
