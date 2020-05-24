@@ -23,7 +23,7 @@ Create a small IoT application that can enable the user to perform I/O operation
 ## Prequisite Software
 
 * Arduino v1.8.12
-* ES8266 Library
+* ESP8266 Library
 * SPIFFS Plugin
 * STM32CubeMX
 * Keil uVision 5
