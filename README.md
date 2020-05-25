@@ -8,10 +8,6 @@ This project was implemented for the course CSCE4301 - Section 1 Embedded System
 
 Khaled Soliman CE Undergraduate
 
-### Supervised By
-
-Doctor Mohamed Shalan PhD
-
 ### Project Prompt
 
 Create a small IoT application that can enable the user to perform I/O operations with the STM32 module through a web interface. 
@@ -27,18 +23,35 @@ Create a small IoT application that can enable the user to perform I/O operation
 ## Prequisite Software
 
 * Arduino v1.8.12
-* ES8266 Library
+* ESP8266 Library
 * SPIFFS Plugin
 * STM32CubeMX
 * Keil uVision 5
 
+## Building
+
+There are two components to this project the arduino code to be flashed onto the ESP module and the keil code to be flashed onto the STM module.
+
+Once you have installed the prequisite software proceed by compiling and flashing the code onto their respective modules.
+
+## Running
+
+To run the code just:
+- Power up the modules
+- If in access point mode then
+  - Connect to the WiFi called ESPap using the password which is defaulted on "12345678"
+  - Enter into your browser window the IP address 192.168.4.1 to access the WiFi module's web server
+- If in station mode
+  - Get the device local ip from your gateway
+  - Use that ip to access the webserver
+
 ## Architecture
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/architecture.png "Architecture IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/architecture.png "Architecture IMG")
 
 ## Connections
 
-![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Connections.png "Connections IMG")
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/Connections.png "Connections IMG")
 
 ## Functionality
 
@@ -50,8 +63,12 @@ Create a small IoT application that can enable the user to perform I/O operation
 * Setting the time on the RTC module
 * Setting an alarm on the RTC module
 
-## Command Structure 
+## Communication Structure 
+### Structure
+`$ID Parameter1 Parameter2...ParameterN\n`
 
+Every command starts with $ and ends with \n, the $ is to distinguish the command ID from command parameters and the \n is to mark the end of the command distinguishing commands from each other
+### Commands
 | Command | Description |
 |---|---|
 | $P STM | Ping STM module |
@@ -67,9 +84,22 @@ Create a small IoT application that can enable the user to perform I/O operation
 | $G Alarm | Get alarm status of RTC module |
 | $G Temp | Get temperature of RTC module |
 
+## Operation Demo
+
+### Youtube
+
+https://youtu.be/zWNvBTCvp94
+
+### Screenshots
+
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/OperationSS1.png "Connections IMG")
+
+![alt text](https://github.com/KhaledSoliman/EmbeddedIoTWiFiESP8266/blob/master/Docs/OperationSS2.png "Connections IMG")
+
 ## Limitations
 
 * SPIFFS is deprecated and should migrate to LittleFS for better directory structure
 * Web Server serves clients on a public socket (Improve websocket communications)
 * If any of the HTML or CSS3 files get too large web server faces issues in serving them (Stream data by chunks)
 * Implement FreeRTOS or similar functionalities in the microcontroller for better response time/extensibility
+* Sync Functionality
