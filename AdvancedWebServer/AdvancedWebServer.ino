@@ -2,14 +2,22 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <WebSocketsServer.h>
-#include <ESP8266mDNS.h>
 
-#define APSTASSID "ESPap"
-#define APSTAPSK  "khaled112358"
+#define AP_SSID "ESPap"
+#define AP_PSK  "12345678"
 
+#define STA_SSID "yourwifi"
+#define STA_PSK "12345678"
 
-const char *ap_ssid = APSTASSID;
-const char *ap_password = APSTAPSK;
+const char *ap_ssid = AP_SSID;
+const char *ap_password = AP_PSK;
+
+const char *ssid = STA_SSID;
+const char *password = STA_PSK;
+
+bool stationMode = true;
+
+const bool DEBUG = false;
 
 //Commands
 const char ping_Command[] = "$P STM";
@@ -21,20 +29,24 @@ const char setAlarm_Command[] = "$S Alarm";
 const char getAlarm_Command[] = "$G Alarm";
 const char getTemperature_Command[] = "$G Temp";
 
-ESP8266WebServer server(80);
-WebSocketsServer webSocket = WebSocketsServer(81);
-
 const int ESPLed = LED_BUILTIN;
 
 bool LEDESPState = false;
+
 void toggleSTMLED();
+
 void toggleESPLED();
-const bool DEBUG = true;
+
+void serialListen();
+
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
 
 bool handleFileRead(String path);
 
 String getContentType(String filename);
+
+ESP8266WebServer server(80);
+WebSocketsServer webSocket = WebSocketsServer(81);
 
 void setup(void) {
   pinMode(ESPLed, OUTPUT);
@@ -47,18 +59,32 @@ void setup(void) {
     Serial.println("Configuring access point...");
   }
 
-  WiFi.softAP(ap_ssid, ap_password);
-  IPAddress myIP = WiFi.softAPIP();
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvent);
+  
+  if (stationMode) {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
 
-  if (DEBUG) {
-    Serial.print("AP IP address: ");
-    Serial.println(myIP);
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+    }
+
+    if (DEBUG) {
+      Serial.println("");
+      Serial.println("WiFi connected");
+      Serial.println("IP address: ");
+      Serial.println(WiFi.localIP());
+    }
+  } else {
+    WiFi.softAP(ap_ssid, ap_password);
+    IPAddress myIP = WiFi.softAPIP();
+    if (DEBUG) {
+      Serial.print("AP IP address: ");
+      Serial.println(myIP);
+    }
   }
-
-  if (MDNS.begin("esp8266") && DEBUG) {
-    Serial.println("MDNS responder started");
-  }
-
+  
   SPIFFS.begin();
 
   server.onNotFound([]() {
@@ -70,16 +96,12 @@ void setup(void) {
   if (DEBUG) {
     Serial.println("HTTP server started");
   }
-
-  webSocket.begin();
-  webSocket.onEvent(webSocketEvent);
 }
 
 void loop(void) {
   webSocket.loop();
   serialListen();
   server.handleClient();
-  MDNS.update();
 }
 
 void transmit_delayed(const char* trx_buffer, int period) {
@@ -184,29 +206,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       break;
   }
 }
-
-//void handleRoot() {
-//  digitalWrite(led, 1);
-////  int sec = millis() / 1000;
-////  int min = sec / 60;
-////  int hr = min / 60;
-//  int htmlSize = strlen(INDEX_HTML);
-//  server.setContentLength(htmlSize);
-//  server.send(200, "text/html", "");
-//  int bufferCounter = 0;
-//  int bufferSize = 6000;
-//  int chunks = htmlSize/bufferSize;
-//  int remainder = htmlSize%bufferSize;
-//  Serial.printf("bufferCounter = [%u], bufferSize = [%u], chunks = [%u], remainder = [%u]\r\n", bufferCounter, bufferSize, chunks, remainder);
-//  for(int i=0;i<chunks;i++){
-//    Serial.printf("bufferCounter = [%u]\r\n",bufferCounter);
-//    server.sendContent_P(&INDEX_HTML[bufferCounter], bufferSize); //send the current buffer
-//    bufferCounter+=bufferSize;
-//  }
-//  Serial.printf("bufferCounter = [%u]\r\n",bufferCounter);
-//  server.sendContent_P(&INDEX_HTML[bufferCounter], remainder); //send the current buffer
-//  digitalWrite(led, 0);
-//}
 
 bool handleFileRead(String path) { // send the right file to the client (if it exists)
   if (DEBUG) {

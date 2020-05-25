@@ -94,6 +94,13 @@ void setAlarm(uint8_t hours[2], uint8_t minutes[2], uint8_t secs[2]) {
 	minutes[1] = minutes[1] - '0';
 	secs[0] = secs[0] - '0';
 	secs[1] = secs[1] - '0';
+	
+		 
+	HAL_I2C_Master_Transmit(&hi2c1, 0xD0, status, 1, 10);
+	HAL_I2C_Master_Receive(&hi2c1, 0xD0, status+1, 1, 10);
+	status[1] &= 0xFC; // xxxxxx00
+	HAL_I2C_Master_Transmit(&hi2c1, 0xD0, status, 2, 10);
+	
 	// seconds
 	secbufferAlram[1] = (secs[0] << 4) | secs[1];
 	HAL_I2C_Master_Transmit(&hi2c1, 0xD0, secbufferAlram, 2, 10);

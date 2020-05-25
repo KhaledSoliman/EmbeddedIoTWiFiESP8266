@@ -3,7 +3,7 @@
 <title>Static Call Graph - [EmbeddedProj\EmbeddedProj.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image EmbeddedProj\EmbeddedProj.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri May 15 04:07:51 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Wed May 20 13:16:39 2020
 <BR><P>
 <H3>Maximum Stack Usage =        272 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -481,7 +481,8 @@ Global Symbols
 <LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_TransferConfig
 <LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAlarm
+<LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getTime
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getTemperature
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getAlarm
@@ -843,9 +844,9 @@ Global Symbols
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Master_Transmit
 <LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Master_Receive
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hexToAscii
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strtol
 <LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strtol
 </UL>
 <BR>[Called By]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;listen
 </UL>
@@ -910,11 +911,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;listen
 </UL>
 
-<P><STRONG><a name="[9e]"></a>setAlarm</STRONG> (Thumb, 192 bytes, Stack size 24 bytes, main.o(i.setAlarm))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = setAlarm &rArr; HAL_I2C_Master_Transmit &rArr; I2C_WaitOnTXISFlagUntilTimeout &rArr; I2C_IsAcknowledgeFailed
+<P><STRONG><a name="[9e]"></a>setAlarm</STRONG> (Thumb, 268 bytes, Stack size 32 bytes, main.o(i.setAlarm))
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = setAlarm &rArr; HAL_I2C_Master_Receive &rArr; I2C_WaitOnRXNEFlagUntilTimeout &rArr; I2C_IsAcknowledgeFailed
 </UL>
 <BR>[Calls]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Master_Transmit
+<LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Master_Receive
 </UL>
 <BR>[Called By]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;listen
 </UL>
